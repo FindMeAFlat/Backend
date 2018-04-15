@@ -14,7 +14,6 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-
 /**
  * Create HTTP server.
  */
@@ -26,6 +25,7 @@ var server = http.createServer(app);
  */
 
 server.listen(port);
+console.log(port)
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -81,7 +81,9 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
+
 function onListening() {
+  console.log('XD')
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
