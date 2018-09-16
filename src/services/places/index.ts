@@ -1,11 +1,14 @@
-var key = 'AIzaSyC_G9gtZMkt9d_4pgPY1bYj71TusF63oxc';
+import { Promise } from 'es6-promise';
+import { createClient } from '@google/maps';
 
-var googleMapsClient = require('@google/maps').createClient({
+const key = 'AIzaSyC_G9gtZMkt9d_4pgPY1bYj71TusF63oxc';
+
+const googleMapsClient = createClient({
     key: key,
     Promise: Promise
 });
 
-module.exports = autoComplete = (query) => {
+const autoComplete = (query) => {
     console.log(query)
     return googleMapsClient.placesQueryAutoComplete({
         input: query,
@@ -20,3 +23,5 @@ module.exports = autoComplete = (query) => {
             console.log(err)
         })
 }
+
+export default autoComplete;
