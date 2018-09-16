@@ -1,0 +1,3 @@
+* run gulp watch which will compile typescript every time you change or add any file
+* run npm start to run server again
+* write code only in src folder
