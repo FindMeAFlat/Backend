@@ -5,7 +5,7 @@ import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
-
+require('./db');
 
 // var index = require('./routes/index');
 // var users = require('./routes/users');
