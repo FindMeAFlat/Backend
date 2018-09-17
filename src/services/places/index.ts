@@ -9,7 +9,6 @@ const googleMapsClient = createClient({
 });
 
 const autoComplete = (query) => {
-    console.log(query)
     return googleMapsClient.placesQueryAutoComplete({
         input: query,
         language: 'pl',
