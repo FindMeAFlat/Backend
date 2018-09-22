@@ -3,7 +3,7 @@ const gulp = require("gulp"),
   tsProject = ts.createProject("tsconfig.json");
 
 gulp.task('scripts', function () {
-  var tsResult = gulp.src('src/**/*.ts').pipe(tsProject());
+  var tsResult = gulp.src('src/**/*.ts').pipe(tsProject()).on("error", (error) => { });
   return tsResult.js.pipe(gulp.dest("dist"))
 });
 
