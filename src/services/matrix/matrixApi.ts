@@ -1,4 +1,3 @@
-import { Promise } from 'es6-promise';
 
 var key = 'AIzaSyCWu-QxtdaWnTRjRPd5mecgt14RYdHS32g';
 var googleMapsClient = require('@google/maps').createClient({
