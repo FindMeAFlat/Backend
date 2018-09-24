@@ -1,53 +1,64 @@
-import axios from 'axios';
-import { Promise } from 'es6-promise';
+const url = require('url');
 
-const standardApis: ApiMod[] = [];
-const userApis: { [key: string]: ApiMod[] } = {}
+import { IApi, ApiWrapper } from '../db/models/api';
+import { Repositories } from './../db';
+import ValidationResult from '../models/validationResult';
 
-interface Api {
-  url: string,
-  accessPathToRating: string,
-  maxRating: number
+const apiRepository = Repositories.Api;
+
+async function getApis(userId: number): Promise<ApiWrapper[]> {
+  const rawApis = await apiRepository.where({ $or: [{ userId: undefined }, { userId }] });
+  return rawApis.map(rawApi => new ApiWrapper(rawApi));
 }
 
-class ApiMod {
-  constructor(private api: Api) { }
+function addApi(api: IApi): Promise<IApi> {
+  return apiRepository.create(api);
+}
 
-  fetchRating(x, y): Promise<number> {
-    return new Promise((resolve, reject) => {
-      const { url, accessPathToRating, maxRating } = this.api;
-      axios.get(url).then(res => {
-        resolve(Math.round(parseFloat(accessPathToRating.split('.').filter(path => path.length > 0).reduce((prev, curr) => prev != null ? prev[curr] : undefined, res)) * 100 / maxRating));
-      },
-        err => {
-          console.error(err);
-          reject(err);
-        })
-    });
+function addUserApi(api: IApi): Promise<IApi> {
+  function checkApi(api: IApi): ValidationResult {
+    const validationResult = new ValidationResult();
+    const { urlTemplate, rating: { propertyAccess, maxRatingValue }, importance, userId } = api;
+
+    if (!userId) validationResult.addErrorMessage("UserId must be provided...");
+
+    if (typeof importance !== "number" || importance <= 0 || importance > 100) validationResult.addErrorMessage("Importance must be a number in range [1:100]...");
+
+    if (typeof propertyAccess !== "string" || new RegExp(/^\s*\S+\s*$/g).test(propertyAccess.trim()) === false) validationResult.addErrorMessage("Property access schema is not valid...");
+
+    if (typeof maxRatingValue !== "number" || maxRatingValue <= 0) validationResult.addErrorMessage("Max rating value must be a positive number...");
+
+    if (urlTemplate.indexOf("${lat}") === -1 || urlTemplate.indexOf("${lon}") === -1) validationResult.addErrorMessage("Url should contain ${lat} and ${lon}...");
+
+    try { new url.URL(urlTemplate); } catch (e) { console.log(e); validationResult.addErrorMessage("Url is not valid..."); }
+
+    if (validationResult.valid)
+      new ApiWrapper(api).fetchRating(1, 1).catch((err) => { validationResult.addErrorMessage("Cannot fetch example data from API..."); });
+
+    return validationResult;
   }
+
+  const { valid, errors } = checkApi(api);
+  if (!valid) { errors.forEach(error => console.error(error)); return Promise.resolve(null); }
+
+  return addApi(api);
 }
 
-function getUserApis(userId: number): ApiMod[] {
-  if (userApis[userId] === undefined) userApis[userId] = [];
-  return userApis[userId];
-}
+[
+  //TODO: register our apis here...
+].forEach(addApi);
 
-function addStandardApi(api: Api): void {
-  standardApis.push(new ApiMod(api));
-}
-
-function addUserApi(userId: number, api: Api): boolean {
-  getUserApis(userId).push(new ApiMod(api));
-  return true;
-}
-
-function getApis(userId: number): ApiMod[] {
-  return standardApis.concat(getUserApis(userId));
-}
+// addUserApi({
+//   urlTemplate: "http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=ad1950ed444c7c779dce3ec27dac5fa6",
+//   rating: {
+//     propertyAccess: "data.main.temp",
+//     maxRatingValue: 320,
+//   },
+//   importance: 10,
+//   userId: 9
+// }).then(api => console.log(api));
 
 export {
-  Api,
-  addStandardApi,
   addUserApi,
   getApis,
 }

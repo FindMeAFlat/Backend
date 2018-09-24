@@ -1,4 +1,3 @@
-import { Promise } from 'es6-promise';
 
 //Cities serving Google Transit in Poland: Bialystok, Jaworzno, Łódź, Olsztyn, Szczecin, Warszawa, Zielona Gora
 

@@ -3,6 +3,9 @@
     "target": "es5",
     "types": [
       "node"
+    ],
+    "lib": [
+      "es7",
     ]
   }
 }
