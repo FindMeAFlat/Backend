@@ -1,0 +1,17 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {},
+    "rulesDirectory": [],
+    "exclude": [
+        ".idea",
+        "dist",
+        "node_modules",
+        "public",
+        "views",
+        "."
+    ]
+}

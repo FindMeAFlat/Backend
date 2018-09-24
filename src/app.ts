@@ -5,6 +5,7 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
+import { init as dbInit } from './db';
 import { getApis } from "./logic/apiManager";
 
 // var index = require('./routes/index');
@@ -48,5 +49,6 @@ app.use(function (err, req, res, next) {
 });
 
 // getApis(10).then(apis => console.log(apis)); //TODO: left for api test
+dbInit();
 
 export { app };

@@ -35,9 +35,9 @@ export abstract class RepositoryBase<T> implements IRead<T>, IWrite<T> {
     return (existingItems ? await existingItems : this.model.create(item)) as any as Promise<T>;
   }
 
-  update(cond: Object, item: T): Promise<T> { return this.model.findOneAndUpdate(cond, item).exec() as any as Promise<T>; }
+  update(cond: Object, item: T): Promise<T> { return this.model.update(cond, item).exec() as any as Promise<T>; }
   updateById(_id: string, item: T): Promise<T> { return this.model.findByIdAndUpdate(_id, item).exec() as any as Promise<T> }
 
-  delete(cond: Object): Promise<any> { return this.model.findOneAndRemove(cond).exec() as any as Promise<T>; }
+  delete(cond: Object): Promise<any> { return this.model.remove(cond).exec() as any as Promise<T>; }
   deleteById(id: string): Promise<any> { return this.model.findByIdAndRemove(id).exec() as any as Promise<T>; }
 }
