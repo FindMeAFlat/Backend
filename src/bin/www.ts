@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-import Server from '../server';
+import { app } from '../app';
 import * as _debug from 'debug';
 import * as http from 'http';
 import * as process from 'process'
@@ -15,13 +15,13 @@ const debug = _debug('backend:server');
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3001');
-Server.set('port', port);
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(Server);
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
