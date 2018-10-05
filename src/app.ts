@@ -1,11 +1,12 @@
 
 import * as express from 'express';
 import * as path from 'path';
-import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
+import { init as dbInit } from './db';
+import { getApis } from "./logic/apiManager";
 
 // var index = require('./routes/index');
 // var users = require('./routes/users');
@@ -46,5 +47,8 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// getApis(10).then(apis => console.log(apis)); //TODO: left for api test
+dbInit();
 
 export { app };

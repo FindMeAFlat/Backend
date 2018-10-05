@@ -1,4 +1,3 @@
-import { Promise } from 'es6-promise';
 import { createClient } from '@google/maps';
 
 const key = 'AIzaSyC_G9gtZMkt9d_4pgPY1bYj71TusF63oxc';
