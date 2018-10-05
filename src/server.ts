@@ -7,7 +7,6 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import { init as dbInit } from './db';
 import CityRouter from './routes/cities';
 
 class Server {
@@ -17,7 +16,6 @@ class Server {
         this.app = express();
         this.config();
         this.routes();
-        dbInit();
     }
 
     public config() {
@@ -34,9 +32,7 @@ class Server {
     }
 
     public routes(): void {
-        let router: express.Router;
-        router = express.Router();
-
+        const router = express.Router();
         this.app.use('/', router);
         this.app.use('/api/cities', CityRouter);
     }

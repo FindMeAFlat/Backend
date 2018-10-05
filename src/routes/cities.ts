@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import { Repositories } from '../db';
+import {Router, Request, Response} from 'express';
+import {Repositories} from '../db';
 
 class CityRouter {
     router: Router;
@@ -10,16 +10,14 @@ class CityRouter {
     }
 
     public GetCities(req: Request, res: Response): void {
-        let data = [];
+        let data;
         Repositories.City.where({}).then((result) => {
-             for(let city of result){
-                 data.push(city.name);
-             }
-             const status = res.statusCode;
-             res.json({
-                 status,
-                 data
-             });
+            data = result.map((city) => city.name);
+            const status = res.statusCode;
+            res.json({
+                status,
+                data
+            });
         });
     }
 
@@ -28,7 +26,7 @@ class CityRouter {
     }
 }
 
-const citiesRoutes = new CityRouter();
-citiesRoutes.routes();
+const citiesRouter = new CityRouter();
+citiesRouter.routes();
 
-export default citiesRoutes.router;
+export default citiesRouter.router;

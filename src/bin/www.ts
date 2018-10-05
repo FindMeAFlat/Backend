@@ -15,7 +15,7 @@ const debug = _debug('backend:server');
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3001');
+const port = normalizePort(process.env.PORT || '3000');
 Server.set('port', port);
 /**
  * Create HTTP server.
