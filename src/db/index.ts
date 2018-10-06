@@ -13,7 +13,7 @@ export const Repositories = {
   Api: new ApiRepository(),
   PtStop: new PtStopRepository(),
   City: new CityRepository(),
-}
+};
 
 export function init() {
   initCities();
