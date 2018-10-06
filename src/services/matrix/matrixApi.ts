@@ -1,5 +1,5 @@
+/*
 
-var key = 'AIzaSyCWu-QxtdaWnTRjRPd5mecgt14RYdHS32g';
 var googleMapsClient = require('@google/maps').createClient({
 	key: key,
 	Promise: Promise
@@ -43,3 +43,4 @@ var getPlacesDistance = (origins, destinations, mode) => {
 }
 
 export { getPlacesDistance };
+*/

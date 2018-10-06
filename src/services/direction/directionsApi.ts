@@ -1,7 +1,8 @@
+/*
 
 //Cities serving Google Transit in Poland: Bialystok, Jaworzno, Łódź, Olsztyn, Szczecin, Warszawa, Zielona Gora
 
-var key = 'AIzaSyBAFqFmtK0vxuJ7UjLXiRLKXebSdR9n9nQ';
+
 var googleMapsClient = require('@google/maps').createClient({
 	key: key,
 	Promise: Promise
@@ -81,4 +82,4 @@ var getDirectionData = (origin, destination, mode) => {
 	});
 };
 
-export { getDirectionData };
+export { getDirectionData };*/

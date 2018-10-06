@@ -1,6 +1,6 @@
+/*
 import { createClient } from '@google/maps';
 
-const key = 'AIzaSyC_G9gtZMkt9d_4pgPY1bYj71TusF63oxc';
 
 const googleMapsClient = createClient({
     key: key,
@@ -24,3 +24,4 @@ const autoComplete = (query) => {
 }
 
 export default autoComplete;
+*/
