@@ -8,6 +8,8 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
 import CityRouter from './routes/cities';
+import MapRouter from './routes/map';
+
 
 class Server {
     public app: express.Application;
@@ -35,6 +37,7 @@ class Server {
         const router = express.Router();
         this.app.use('/', router);
         this.app.use('/api/cities', CityRouter);
+        this.app.use('/getMapCoordinates', MapRouter);
     }
 }
 
