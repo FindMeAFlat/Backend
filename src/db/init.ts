@@ -4,6 +4,10 @@ import { Repositories } from '.';
 export function initCities() {
   cities.forEach(city => {
     const existingCity = Repositories.City.single({ name: city });
-    if (!existingCity) Repositories.City.create({ name: city });
+    existingCity.then((foundCity) => {
+      if(!foundCity) {
+          Repositories.City.create({ name: city });
+      }
+    });
   });
 }
