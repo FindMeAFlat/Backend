@@ -32,8 +32,8 @@ function calcGeoDistance(coor1: Coordinate, coor2: Coordinate): number {
 
 function stringPointToFloat(coor: StringCoordinate): Coordinate {
     return {
-        lat: parseFloat(coor.lon),
-        lon: parseFloat(coor.lat)
+        lat: parseFloat(coor.lat),
+        lon: parseFloat(coor.lon)
     }
 }
 
