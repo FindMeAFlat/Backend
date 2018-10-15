@@ -1,14 +1,14 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import autoComplete from '../services/places';
 
-const router = Router();
-
-/* GET home page. */
-router.post('/autocomplete', function (req, res, next) {
+function getCities(req: Request, res: Response): void {
     const { query } = req.body;
-    const predictions = autoComplete(query).then(response => {
+    autoComplete(query).then(response => {
         res.send(JSON.stringify(response));
     });
-});
+}
 
-export default router;
+const autoCompleteRouter = Router();
+autoCompleteRouter.post('/autocomplete', getCities);
+
+export default autoCompleteRouter;

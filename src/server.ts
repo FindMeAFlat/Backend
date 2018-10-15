@@ -7,7 +7,8 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import CityRouter from './routes/cities';
+import citiesRouter from './routes/cities';
+import stationsRouter from './routes/stations';
 
 class Server {
     public app: express.Application;
@@ -34,7 +35,8 @@ class Server {
     public routes(): void {
         const router = express.Router();
         this.app.use('/', router);
-        this.app.use('/api/cities', CityRouter);
+        this.app.use('/api/cities', citiesRouter);
+        this.app.use('/api/stations', stationsRouter);
     }
 }
 
