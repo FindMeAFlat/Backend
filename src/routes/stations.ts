@@ -38,7 +38,7 @@ stationsRouter.post('/', async (req, res, next) => {
     const { criteria, target, radius, city } = req.body;
     const STATIONS_COUNT = 10;
 
-    const nearestStops = await filterStopsByDistance(target, radius, city.name);
+    const nearestStops = await filterStopsByDistance(target, radius, city);
     const uniqueStops = _.uniqBy(nearestStops, stop => stop.name);
 
     const ratingStops = uniqueStops
