@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "watch": "gulp watch",
     "start": "node ./dist/bin/www"
   },
   "dependencies": {
@@ -13,7 +14,7 @@
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
-    "dotenv": "^6.0.0",
+    "dotenv": "^6.1.0",
     "express": "~4.15.5",
     "helmet": "^3.13.0",
     "jade": "~1.11.0",
@@ -25,7 +26,7 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
-    "@types/node": "^10.9.4",
+    "@types/node": "^10.11.7",
     "exec": "^0.2.1",
     "gulp": "^3.9.1",
     "gulp-typescript": "^5.0.0-alpha.3",
