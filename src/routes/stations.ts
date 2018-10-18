@@ -9,9 +9,7 @@ const router = Router();
 router.post('/', function (req, res, next) {
     const { target, radius, city } = req.body;
     filterByDistance(target, radius, city).then(results => {
-        const stations = _.uniqBy(results, (entry) => entry.name);
-        console.log(stations.length)
-        res.send(stations);
+        res.send(results);
     })
 });
 
