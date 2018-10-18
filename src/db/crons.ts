@@ -10,7 +10,7 @@ function cronStops(city) {
       Repositories.PtStop.create({
         city,
         name,
-        coordinates: { lat: coordinates[0], lon: coordinates[1] },
+        coordinates: { lon: coordinates[0], lat: coordinates[1] },
       });
     });
   });

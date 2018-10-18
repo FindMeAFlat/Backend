@@ -35,8 +35,8 @@ class Server {
     public routes(): void {
         const router = express.Router();
         this.app.use('/', router);
-        this.app.use('/api/cities', CityRouter);
-        this.app.use('/stations', StationsRouter);
+        this.app.use('/api/cities', citiesRouter);
+        this.app.use('/api/stations', stationsRouter);
     }
 }
 
