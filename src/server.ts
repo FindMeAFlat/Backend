@@ -7,8 +7,8 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import citiesRouter from './routes/cities';
-import stationsRouter from './routes/stations';
+import CityRouter from './routes/cities';
+import StationsRouter from './routes/stations'
 
 class Server {
     public app: express.Application;
