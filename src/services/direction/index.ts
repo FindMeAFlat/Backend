@@ -2,13 +2,12 @@ const envDir = __dirname.split('/').slice(0,-2).join('/');
 require('dotenv').config({ path: `${envDir}/.env` });
 //Cities serving Google Transit in Poland: Bialystok, Jaworzno, Łódź, Olsztyn, Szczecin, Warszawa, Zielona Gora
 
-
 const googleMapsClient = require('@google/maps').createClient({
 	key: process.env.API_KEY,
 	Promise: Promise
 });
 
-const getDirectionData = (origin, destination, mode) => {
+export default function getDirectionData(origin, destination, mode) {
 	const secondsToMinutes = (seconds) => {
 		return Math.round(parseInt(seconds, 10) / 60);
 	};
@@ -81,5 +80,3 @@ const getDirectionData = (origin, destination, mode) => {
 			});
 	});
 };
-
-export { getDirectionData };
