@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "watch": "gulp watch",
-    "start": "node ./dist/bin/www"
+    "start": "node ./dist/bin/www",
+    "test": "mocha --exit -- dist/test/**/*.test.js"
   },
   "dependencies": {
     "@google/maps": "^0.4.6",
@@ -26,11 +27,19 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.6",
+    "@types/mocha": "^5.2.5",
     "@types/node": "^10.11.7",
+    "chai": "^4.2.0",
     "exec": "^0.2.1",
     "gulp": "^3.9.1",
     "gulp-typescript": "^5.0.0-alpha.3",
     "merge2": "^1.2.2",
+    "mocha": "^5.2.0",
+    "mocha-typescript": "^1.1.17",
+    "source-map-support": "^0.5.9",
+    "ts-mock-imports": "^1.2.1",
+    "ts-mockito": "^2.3.1",
     "typescript": "^3.0.3"
   }
 }
