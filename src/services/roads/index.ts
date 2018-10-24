@@ -12,9 +12,10 @@ function getBBoxCoordinates(lat, lon, radius) {
 function removeDuplicates(array) {
     let newArray = [];
     array.map((street) => {
-        street = street.split(' ');
-        if(!newArray.includes(_.last(street))){
-            newArray.push(_.last(street));
+        if(newArray.filter((s) => newArray.length > 0 ?
+                s.includes(_.last(street.split(' '))) : true
+        ).length===0) {
+            newArray.push(street);
         }
     });
     return newArray;
@@ -27,14 +28,17 @@ export default async function getNearestRoads(req) {
 
     return new Promise((resolve, reject) => {
         query_overpass(query, (err, res) => {
-            const streets = res.features.filter((feature) => {
-                const { properties: {tags: { name } } } = feature;
-                return !!name;
-            }).map((feature) => {
-                const { properties: {tags: { name } } } = feature;
-                return name;
-            });
-            return resolve(removeDuplicates(streets));
-        });
+            if(res) {
+                const streets = res.features.filter((feature) => {
+                    const {properties: {tags: {name}}} = feature;
+                    return !!name;
+                }).map((feature) => {
+                    const {properties: {tags: {name}}} = feature;
+                    return name;
+                });
+                return resolve(removeDuplicates(streets));
+            } else {
+                return resolve([]);
+            }});
     });
 }
