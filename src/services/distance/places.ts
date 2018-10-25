@@ -1,10 +1,5 @@
 import { createClient } from '@google/maps';
 
-const googleMapsClient = createClient({
-    key: process.env.REACT_APP_GOOGLE_PLACES_KEY,
-    Promise: Promise
-});
-
 function getRadius({ distance, unit }) {
     switch (unit) {
         case 'km': return distance * 1000;
@@ -16,7 +11,10 @@ function getRadius({ distance, unit }) {
 async function fetchRatingByDistance({ selectedPlaceType, distance, importance }, { coordinates }) {
     const radius = getRadius(distance);
 
-    return googleMapsClient
+    return createClient({
+            key: process.env.REACT_APP_GOOGLE_PLACES_KEY,
+            Promise: Promise
+        })
         .placesNearby({
             radius,
             type: selectedPlaceType,

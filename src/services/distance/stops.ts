@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-import { Repositories } from '../../db/index';
+import { Repositories } from '../../db';
 import {IPtStop} from "../../db/models/ptStop";
 import Coordinates from '../../models/coordinates';
 import getDirectionData from '../direction';
