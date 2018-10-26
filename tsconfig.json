@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "types": [
-      "node"
-    ],
     "lib": [
       "es7",
-    ]
+    ],
+    "types": [ "node", "mocha", "chai" ],
+    "experimentalDecorators": true
   }
 }
