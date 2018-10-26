@@ -3,15 +3,15 @@ import { computeDestinationPoint } from 'geolib';
 const query_overpass = require('query-overpass');
 
 function getBBoxCoordinates(lat, lon, radius) {
-    let points = [];
-    points.push(computeDestinationPoint({lat,lon},radius, 225));
-    points.push(computeDestinationPoint({lat,lon},radius, 45));
+    const points = [];
+    points.push(computeDestinationPoint({lat, lon}, radius, 225));
+    points.push(computeDestinationPoint({lat, lon}, radius, 45));
     return points;
 }
 
 function removeDuplicates(array) {
     let newArray = [];
-    array.map((street) => {
+    array.forEach((street) => {
         if(newArray.filter((s) => newArray.length > 0 ?
                 s.includes(_.last(street.split(' '))) : true
         ).length===0) {
@@ -29,16 +29,11 @@ export default async function getNearestRoads(req) {
     return new Promise((resolve, reject) => {
         query_overpass(query, (err, res) => {
             if(res) {
-                const streets = res.features.filter((feature) => {
-                    const {properties: {tags: {name}}} = feature;
-                    return !!name;
-                }).map((feature) => {
-                    const {properties: {tags: {name}}} = feature;
-                    return name;
-                });
-                return resolve(removeDuplicates(streets));
+                const streets = res.features.filter(feature => feature.properties.tags.name)
+                    .map(feature => feature.properties.tags.name);
+                resolve(removeDuplicates(streets));
             } else {
-                return resolve([]);
+                resolve([]);
             }});
     });
 }
