@@ -1,5 +1,6 @@
 import { PtStopRepository } from './models/ptStop';
 import { CityRepository } from './models/city';
+import { CriteriaRepository } from './models/criteria';
 import registerCrons from './crons';
 import { initCities } from './init';
 
@@ -11,6 +12,7 @@ mongoose.connection.once('open', console.log.bind(console, "db:connected"));
 export const Repositories = {
   PtStop: new PtStopRepository(),
   City: new CityRepository(),
+  Criteria: new CriteriaRepository(),
 };
 
 export function init() {
