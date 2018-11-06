@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Coordinates from './../../models/coordinates';
 import ICustomApi from './../../models/customApi';
+import { Repositories } from '../../db';
+import { ICriteria } from '../../db/models/criteria';
 
 const URL = require('url').URL;
 
@@ -26,10 +28,10 @@ class CustomApiWrapper {
     private validApi: boolean;
 
     constructor(private api: ICustomApi) {
-        this.validApi = this.checkCustomApi(api).valid;
+        this.validApi = CustomApiWrapper.checkCustomApi(api).valid;
     }
 
-    checkCustomApi(customApi: ICustomApi): ValidationResult {
+    static checkCustomApi(customApi: ICustomApi): ValidationResult {
         const validationResult = new ValidationResult();
         const { url, propertyAccess, maxRatingValue, importance } = customApi;
 
@@ -71,5 +73,26 @@ class CustomApiWrapper {
         });
     }
 }
+
+function addCustomCriteria(userId: string, name: string, customApi: ICustomApi): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        if(!CustomApiWrapper.checkCustomApi(customApi).valid) { resolve(false); }
+
+        Repositories.Criteria.create({
+            customApi,
+            name,
+            userId,
+        })
+        .then(() => resolve(true))
+        .catch((e) => reject(e));
+    });
+}
+
+async function getCustomCriteria(userId): Promise<{ name: string, customApi: ICustomApi }[]> {
+    const criteria = await Repositories.Criteria.where({ userId });
+    return criteria.map(criteria => ({ name: criteria.name, customApi: criteria.customApi }));
+}
+
+export { CustomApiWrapper, addCustomCriteria, getCustomCriteria };
 
 export default CustomApiWrapper;

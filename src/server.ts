@@ -10,6 +10,7 @@ import * as bodyParser from 'body-parser';
 import CityRouter from './routes/cities';
 import StationsRouter from './routes/stations'
 import RoadsRouter from './routes/roads';
+import CriteriaRouter from './routes/criteria';
 
 class Server {
     public app: express.Application;
@@ -39,6 +40,7 @@ class Server {
         this.app.use('/api/cities', CityRouter);
         this.app.use('/api/stations', StationsRouter);
         this.app.use('/api/roads', RoadsRouter);
+        this.app.use('/api/criteria', CriteriaRouter);
     }
 }
 
