@@ -1,32 +1,13 @@
 const _ = require('lodash');
 
 import { Repositories } from '../../db';
-import {IPtStop} from "../../db/models/ptStop";
+import { IPtStop } from "../../db/models/ptStop";
 import Coordinates from '../../models/coordinates';
-import getDirectionData from '../direction';
+import { calcGeoDistance } from './../helpers';
 
 interface StringCoordinate {
     lat: string;
     lon: string;
-}
-
-function degreesToRadians(degrees: number): number {
-    return degrees * Math.PI / 180;
-}
-
-function calcGeoDistance(coor1: Coordinates, coor2: Coordinates): number {
-    const earthRadiusKm = 6371;
-
-    const dLat = degreesToRadians(coor2.lat-coor1.lat);
-    const dLon = degreesToRadians(coor2.lon-coor1.lon);
-
-    const lat1 = degreesToRadians(coor1.lat);
-    const lat2 = degreesToRadians(coor2.lat);
-
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return earthRadiusKm * c;
 }
 
 function stringPointToFloat(coor: StringCoordinate): Coordinates {
@@ -37,8 +18,7 @@ function stringPointToFloat(coor: StringCoordinate): Coordinates {
 }
 
 export default async function filterStopsByDistance(target: Coordinates, radius: number, city: string): Promise<IPtStop[]> {
-    const res = await Repositories.PtStop.where({ city });
-    const filteredStations = res.filter(station => {
+    const filteredStations = (await Repositories.PtStop.where({ city })).filter(station => {
         const floatCoors = stringPointToFloat(station.coordinates);
         const distance = calcGeoDistance(target, floatCoors);
         return distance <= radius;
