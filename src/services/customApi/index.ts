@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Mutex, MutexInterface } from 'async-mutex';
+
 import Coordinates from './../../models/coordinates';
 import ICustomApi from './../../models/customApi';
 import { Repositories } from '../../db';
@@ -25,14 +27,20 @@ class ValidationResult {
 
 class CustomApiWrapper {
     private validApi: boolean;
+    private lastReq: number; //date in milliseconds
+    private mutex: MutexInterface;
 
     constructor(private api: ICustomApi) {
         this.validApi = this.checkCustomApi().valid;
+        this.lastReq = 0;
+        this.mutex = new Mutex();
     }
 
     checkCustomApi = (): ValidationResult => {
         const validationResult = new ValidationResult();
-        const { url, propertyAccess, maxRatingValue, importance } = this.api;
+        const { url, requestsLimit, propertyAccess, maxRatingValue, importance } = this.api;
+
+        if (requestsLimit && requestsLimit <= 50) validationResult.addErrorMessage("Limit of requests must be a number in range [51:...] or empty...")
 
         if (typeof importance !== "number" || importance <= 0 || importance > 100) validationResult.addErrorMessage("Importance must be a number in range [1:100]...");
 
@@ -52,22 +60,35 @@ class CustomApiWrapper {
 
     fetchRating(coordinates: Coordinates): Promise<{ rating: number }> {
         if (!this.validApi) return Promise.resolve(null);
-        return new Promise((resolve, reject) => {
-            const { url, propertyAccess, maxRatingValue, importance, ascending } = this.api;
 
-            const { lat, lon } = coordinates; //hack:lat and lon are used for eval
-            const evaluatedUrl = eval('`' + url + '`');
+        const { lat, lon } = coordinates; //hack:lat and lon are used for eval
 
-            axios.get(evaluatedUrl)
-                .then(res => {
-                    const rating = propertyAccess.split('.').filter(path => path.length > 0).reduce((prev, curr) => prev != null ? prev[curr] : undefined, res);
-                    if (rating === undefined || typeof rating !== "number") reject(new Error("Cannot fetch rating..."));
-                    const absoluteRating = Math.round(parseFloat(rating) * importance * 100 / maxRatingValue);
-                    resolve({ rating: ascending ? absoluteRating : 10000 - absoluteRating });
-                })
-                .catch((err) => {
-                    reject(err);
-                })
+        return new Promise(async (resolve, reject) => {
+            const { url, requestsLimit, propertyAccess, maxRatingValue, importance, ascending } = this.api;
+
+            let throttleTime;
+
+            this.mutex
+                .acquire()
+                .then((release) => {
+                    const now = Date.now();
+                    throttleTime = (1000 / requestsLimit) - Math.abs(now - this.lastReq);
+                    this.lastReq = Date.now() + throttleTime;
+                    release();
+
+                    setTimeout(() => {
+                        axios.get(eval('`' + url + '`'))
+                        .then(res => {
+                            const rating = propertyAccess.split('.').filter(path => path.length > 0).reduce((prev, curr) => prev != null ? prev[curr] : undefined, res);
+                            if (rating === undefined || typeof rating !== "number") reject(new Error("Cannot fetch rating..."));
+                            const absoluteRating = Math.round(parseFloat(rating) * importance * 100 / maxRatingValue);
+                            resolve({ rating: ascending ? absoluteRating : 10000 - absoluteRating });
+                        })
+                        .catch((err) => {
+                            reject(err);
+                        })
+                    }, Math.max(throttleTime, 0));
+                });
         });
     }
 }
