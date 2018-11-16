@@ -1,23 +1,13 @@
 import { createClient } from '@google/maps';
 import { calcGeoDistance } from './../helpers';
 
-function getRadius({ distance, unit }) {
-    switch (unit) {
-        case 'km': return distance * 1000;
-        case 'mi': return distance * 1609;
-        default: return distance;
-    }
-}
-
 async function fetchRatingByDistance({ selectedPlaceType, distance, importance }, { coordinates }): Promise<{ rating: number, data: any[] }> {
-    const radius = getRadius(distance);
-
     return createClient({
         key: process.env.REACT_APP_GOOGLE_PLACES_KEY,
         Promise: Promise
     })
         .placesNearby({
-            radius,
+            radius: distance,
             type: selectedPlaceType,
             location: [coordinates.lat, coordinates.lon],
         })
