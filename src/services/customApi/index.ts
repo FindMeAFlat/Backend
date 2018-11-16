@@ -72,7 +72,7 @@ class CustomApiWrapper {
                 .acquire()
                 .then((release) => {
                     const now = Date.now();
-                    throttleTime = (1000 / requestsLimit) - Math.abs(now - this.lastReq);
+                    throttleTime = requestsLimit ? (1000 / requestsLimit) - Math.abs(now - this.lastReq) : 0;
                     this.lastReq = Date.now() + throttleTime;
                     release();
 
