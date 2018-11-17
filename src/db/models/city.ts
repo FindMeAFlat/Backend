@@ -6,10 +6,12 @@ const cities = ["Wrocław", "Kraków", "Warszawa", "Gdańsk"];
 
 interface ICity {
   name: string,
+  englishName: string,
 }
 
 const CitySchema: Schema = new Schema({
   name: { type: String, required: true, },
+  englishName: { type: String, required: true, },
 });
 interface ICityDocument extends Document, ICity { }
 const City: Model<ICityDocument> = model<ICityDocument>("City", CitySchema);
