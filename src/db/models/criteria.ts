@@ -13,6 +13,7 @@ const CriteriaSchema: Schema = new Schema({
     customApi: {
         type: {
             url: { type: String, required: true, },
+            requestsLimit: { type: Number, required: false },
             propertyAccess: { type: String, required: true, },
             maxRatingValue: { type: Number, required: true, },
             importance: { type: Number, required: true, },

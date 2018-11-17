@@ -4,8 +4,8 @@ const query_overpass = require('query-overpass');
 
 function getBBoxCoordinates(lat, lon, radius) {
     const points = [];
-    points.push(computeDestinationPoint({lat, lon}, radius, 225));
-    points.push(computeDestinationPoint({lat, lon}, radius, 45));
+    points.push(computeDestinationPoint({ latitude: lat, longitude: lon}, radius, 225));
+    points.push(computeDestinationPoint({ latitude: lat, longitude: lon}, radius, 45));
     return points;
 }
 

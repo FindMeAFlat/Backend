@@ -12,20 +12,10 @@ import CustomApiWrapper from "./../customApi";
 //   ascending: true
 // }
 
-async function fetchRatingsForStop(criteria, stop) {
-    const ratings = await Promise.all(criteria.map(
-        async ({ type, data }) => {
-            if (type === 'distance') {
-                return await fetchRatingByDistance(data, stop);
-            }
-            else if (type === 'custom') {
-                return await new CustomApiWrapper(data).fetchRating(stop.coordinates);
-            }
-        }
-    ));
-    const rating = _.sum(ratings.map(({ rating }) => rating)) / _.sum(criteria.map(cr => cr.data.importance));
+async function fetchRatingsForStop(criteriaFunctions, criteriaImportanceSum, stop) {
+    const ratings = await Promise.all(criteriaFunctions.map(async (criteriaFunc) => await criteriaFunc(stop)));
     return {
-        rating,
+        rating: _.sum(ratings.map(({ rating }) => rating)) / criteriaImportanceSum,
         data: ratings.map(({ rating, data }) => data ? data : rating),
     };
 }
@@ -38,8 +28,18 @@ export default async function getBestStops(req): Promise<any[]> {
     const { criteria, target, radius, city } = req.body;
     const STATIONS_COUNT = 10;
 
+    const criteriaFunctions = criteria.map(({ type, data }) => {
+        if (type === 'distance') {
+            return (stop) => fetchRatingByDistance(data, stop);
+        }
+        else if (type === 'custom') {
+            const customApiWrapper = new CustomApiWrapper(data);
+            return (stop) => customApiWrapper.fetchRating(stop.coordinates);
+        }
+    });
+
     const stops = await filterStopsByDistance(target, radius, city);
-    const ratingStops = stops.map(stop => ({ stop, ratingData: fetchRatingsForStop(criteria, stop) }));
+    const ratingStops = stops.map(stop => ({ stop, ratingData: fetchRatingsForStop(criteriaFunctions, _.sum(criteria.map(cr => cr.data.importance)), stop) }));
 
     return await Promise.all(ratingStops.map(x => x.ratingData)).then((ratingData) => {
         const filteredStops = ratingStops
