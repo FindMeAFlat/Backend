@@ -2,7 +2,12 @@ import { Document, Schema, Model, model } from "mongoose";
 
 import { RepositoryBase } from '../baseRepository';
 
-const cities = ["Wrocław", "Kraków", "Warszawa", "Gdańsk"];
+const cities = [
+  { name: "Wrocław", englishName: "Wroclaw" }, 
+  { name: "Kraków", englishName: "Cracow" },
+  { name: "Warszawa", englishName: "Warsaw" },
+  { name: "Gdańsk", englishName: "Gdansk" },
+];
 
 interface ICity {
   name: string,

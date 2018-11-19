@@ -58,7 +58,7 @@ class CustomApiWrapper {
         return validationResult;
     }
 
-    fetchRating(coordinates: Coordinates): Promise<{ rating: number }> {
+    fetchRating(coordinates: Coordinates): Promise<{ data: ICustomApi, rating: number }> {
         if (!this.validApi) return Promise.resolve(null);
 
         const { lat, lon } = coordinates; //hack:lat and lon are used for eval
@@ -82,7 +82,8 @@ class CustomApiWrapper {
                             const rating = propertyAccess.split('.').filter(path => path.length > 0).reduce((prev, curr) => prev != null ? prev[curr] : undefined, res);
                             if (rating === undefined || typeof rating !== "number") reject(new Error("Cannot fetch rating..."));
                             const absoluteRating = Math.round(parseFloat(rating) * importance * 100 / maxRatingValue);
-                            resolve({ rating: ascending ? absoluteRating : 10000 - absoluteRating });
+                            const finalRating = ascending ? absoluteRating : 10000 - absoluteRating;
+                            resolve({ data: { ...this.api, finalRating }, rating: finalRating });
                         })
                         .catch((err) => {
                             reject(err);
