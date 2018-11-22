@@ -39,8 +39,7 @@ export default async function getBestStops(req): Promise<any[]> {
     });
 
     const stops = await filterStopsByDistance(target, radius, city);
-    const ratingStops = stops.map(stop => ({ stop, ratingData: fetchRatingsForStop(criteriaFunctions, _.sum(criteria.map(cr => cr.data.importance)), stop) }));
-
+    const ratingStops = stops.slice(0, 10).map(stop => ({ stop, ratingData: fetchRatingsForStop(criteriaFunctions, _.sum(criteria.map(cr => cr.data.importance)), stop) }));
     return await Promise.all(ratingStops.map(x => x.ratingData)).then((ratingData) => {
         const filteredStops = ratingStops
             .sort(sortByRating)

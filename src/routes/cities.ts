@@ -3,7 +3,7 @@ import { Repositories } from '../db';
 
 function getCities(req: Request, res: Response): void {
     Repositories.City.where({}).then((result) => {
-        const data = result.map((city) => city.name);
+        const data = result.map((city) => ({ name: city.name, englishName: city.englishName }) );
         const status = res.statusCode;
         res.json({
             status,
