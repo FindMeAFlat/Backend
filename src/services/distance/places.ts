@@ -13,18 +13,21 @@ async function fetchRatingByDistance({ selectedPlaceType, distance, importance }
         })
         .asPromise()
         .then(({ json: { results } }) => {
+
             const bestResult = results[0];
             return {
                 rating: bestResult ? 100 * importance : 0,
-                data: { 
-                    selectedPlaceType, 
-                    distance, 
+                data: {
+                    selectedPlaceType,
+                    distance,
                     importance,
-                    calculatedDistance: 
-                        bestResult
-                            ? calcGeoDistance({ lat: bestResult.geometry.location.lat, lon: bestResult.geometry.location.lng }, coordinates) 
-                            : null,
-                }
+                    places: results.map(({ geometry: { location }, icon, name }) => ({
+                        location,
+                        icon,
+                        name,
+                        distance: calcGeoDistance({ lat: location.lat, lon: location.lng }, coordinates),
+                    })),
+                },
             };
         })
         .catch(e => console.error(e));

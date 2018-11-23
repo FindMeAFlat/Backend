@@ -6,7 +6,8 @@ describe("customApiWrapper", () => {
     const baseApi = {
         url: "http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}",
         propertyAccess: "data.main.temp",
-        maxRatingValue: 320,
+        minRatingValue: 100,
+        maxRatingValue: 1000,
         importance: 10,
         ascending: true
     };
