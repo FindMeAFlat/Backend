@@ -21,7 +21,7 @@ async function fetchRatingsForStop(criteriaFunctions, criteriaImportanceSum, sto
 }
 
 function sortByRating(stop1, stop2) {
-    return stop1.ratingData.rating >= stop2.ratingData.rating ? -1 : 1;
+    return stop1.data.rating >= stop2.data.rating ? -1 : 1;
 }
 
 export default async function getBestStops(req): Promise<any[]> {
@@ -42,8 +42,8 @@ export default async function getBestStops(req): Promise<any[]> {
     const ratingStops = stops.slice(0, 10).map(stop => ({ stop, ratingData: fetchRatingsForStop(criteriaFunctions, _.sum(criteria.map(cr => cr.data.importance)), stop) }));
     return await Promise.all(ratingStops.map(x => x.ratingData)).then((ratingData) => {
         const filteredStops = ratingStops
-            .sort(sortByRating)
             .map(({ stop }, i) => ({ stop, data: ratingData[i].data }))
+            .sort(sortByRating)
             .slice(0, STATIONS_COUNT);
 
         return filteredStops;

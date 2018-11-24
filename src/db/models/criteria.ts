@@ -15,6 +15,7 @@ const CriteriaSchema: Schema = new Schema({
             url: { type: String, required: true, },
             requestsLimit: { type: Number, required: false },
             propertyAccess: { type: String, required: true, },
+            minRatingValue: { type: Number, required: true, },
             maxRatingValue: { type: Number, required: true, },
             importance: { type: Number, required: true, },
             ascending: { type: Boolean, required: true, },

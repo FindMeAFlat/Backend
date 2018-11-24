@@ -64,7 +64,7 @@ class CustomApiWrapper {
         const { lat, lon } = coordinates; //hack:lat and lon are used for eval
 
         return new Promise(async (resolve, reject) => {
-            const { url, requestsLimit, propertyAccess, maxRatingValue, importance, ascending } = this.api;
+            const { url, requestsLimit, propertyAccess, minRatingValue, maxRatingValue, importance, ascending } = this.api;
 
             let throttleTime;
 
@@ -81,7 +81,9 @@ class CustomApiWrapper {
                         .then(res => {
                             const rating = propertyAccess.split('.').filter(path => path.length > 0).reduce((prev, curr) => prev != null ? prev[curr] : undefined, res);
                             if (rating === undefined || typeof rating !== "number") reject(new Error("Cannot fetch rating..."));
-                            const absoluteRating = Math.round(parseFloat(rating) * importance * 100 / maxRatingValue);
+                            const range = maxRatingValue - minRatingValue;
+                            const ratingNum = parseFloat(rating);
+                            const absoluteRating = Math.round(ratingNum < minRatingValue ? minRatingValue : Math.min(ratingNum - minRatingValue, range) * importance * 100 / range);
                             const finalRating = ascending ? absoluteRating : 10000 - absoluteRating;
                             resolve({ data: { ...this.api, finalRating }, rating: finalRating });
                         })
