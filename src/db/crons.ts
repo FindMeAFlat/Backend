@@ -17,8 +17,8 @@ function cronStops(city) {
 }
 
 export default function registerCrons() {
-  cron.schedule('0 0 1 * *', () => { //every month
-    const cities = ["Wrocław", "Kraków",];
+  cron.schedule('0 0 1 * *', async () => { //every month
+    const cities = (await Repositories.City.where({})).map(({ name }) => name);
     Repositories.PtStop.delete({}).then(() => cities.forEach(city => cronStops(city)));
   });
 }
